@@ -112,7 +112,7 @@ JokeApp
    }
    ~~~
 
-4. When user reaches to "/" or "" the ```getJoke()``` method will be executed
+4. When user reaches to ```"/"``` or ```""``` the ```getJoke()``` method will be executed
 
 5. This method obtain ```model``` as a method parameter
 
@@ -154,6 +154,57 @@ JokeApp
            
    </html>
    ~~~
+
+
+## Java based Bean Configuration
+
+1. Create the package name : ```Config```. This package will have all the Configuration class
+
+2. Configuration classes basically holds the information about bean configuration
+
+3. Such class are incorporated with the ```@Configuration``` Annotation.
+
+4. The methods of such class basically creates the instances of the required beans. The method of such class are incorporated with the ```@Bean``` annotation
+
+5. ```config.java``` class
+
+   ~~~java
+   // following class annotation will make the class a configuration class
+   @Configuration
+   public class config {
+   
+       // Bean is a method level annotation 
+       // when spring starts up following method will create the instance 
+       // this instance will be available at the application context
+       @Bean
+       public ChuckNorrisQuotes chuckNorrisQuotes(){
+           return new ChuckNorrisQuotes();
+       }
+   }
+   ~~~
+
+6. Inject the above generated dependency in the ```JokeServiceImpl```
+
+   ~~~java
+   @Service
+   public class JokeServiceImpl implements JokeService {
+   
+       private final ChuckNorrisQuotes chuckNorrisQuotes;
+   
+       // this dependency will be obtained from context
+       // constructor injected dependency
+       public JokeServiceImpl(ChuckNorrisQuotes chuckNorrisQuotes) {
+           this.chuckNorrisQuotes = chuckNorrisQuotes;
+       }
+   
+       @Override
+       public String getJoke() {
+           return this.chuckNorrisQuotes.getRandomQuote();
+       }
+   }
+   ~~~
+
+7. Instead of manually injecting dependency in the service, here we used the java based bean configuration to make available the dependency at the application context, and from application context this dependency is obtained at the service.
 
    
 
